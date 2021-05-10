@@ -1,0 +1,117 @@
+$darkgrey: #8a8a8a;
+$primary: #1eaedb;
+*,
+*::after,
+*::before {
+	box-sizing: border-box;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+strong {
+	font-weight: 600;
+}
+.App {
+	width: 70%;
+	margin: 0 auto;
+	padding: 50px 0;
+}
+.universeSections {
+	display: flex;
+	> div {
+		flex: 1;
+		margin-right: 40px;
+		&:last-child {
+			margin-right: 0;
+		}
+	}
+	textarea {
+		margin-bottom: 10px;
+		width: 100%;
+	}
+	.actionBtns {
+		button {
+			margin-right: 10px;
+		}
+	}
+	.mainDishes {
+		h3 {
+			margin: 0;
+		}
+		textarea {
+			margin-top: 15px;
+		}
+		ul {
+			max-height: 200px;
+			overflow: auto;
+			padding-left: 16px;
+		}
+	}
+}
+.univsecTitle {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	.editBtn {
+		background: 0 none;
+		cursor: pointer;
+		color: $primary;
+		border: 0 none;
+	}
+	.weekView & {
+		justify-content: flex-start;
+	}
+}
+.weekView {
+	margin-top: 40px;
+	h2 {
+		margin: 0;
+		margin-right: 15px;
+	}
+}
+.weekSchedule {
+	display: flex;
+	margin-top: 40px;
+	flex-wrap: wrap;
+}
+.weekLabel {
+	color: #888;
+	margin-top: 5px;
+}
+.dayOfWeek {
+	min-width: 250px;
+	flex: 1;
+	margin-bottom: 20px;
+	ul {
+		padding-left: 25px;
+	}
+	.dayLabel {
+		margin: 0;
+		margin-bottom: 5px;
+	}
+	.dayBoxContainer {
+		margin-top: 1px;
+		margin-left: 1px;
+		border: 1px solid $darkgrey;
+		margin-top: -1px;
+		margin-left: -1px;
+	}
+	.cena {
+		padding: 0 10px;
+	}
+	.comida {
+		padding: 10px;
+		border-bottom: 1px solid $darkgrey;
+	}
+}
+.dishSelector {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	.titleLabel {
+		margin: 0 10px;
+	}
+}
