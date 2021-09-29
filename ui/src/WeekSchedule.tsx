@@ -36,26 +36,26 @@ const DayOfWeek: React.FC<DoWProps> = ({ day, comida, cena, editing = false }) =
 			<div className="dayBoxContainer">
 				<div className="comida">
 					<ul>
-						{comida.map((c) =>
+						{comida.map((c, i) =>
 							isEditing ? (
-								<li>
+								<li key={`comida-${i}`}>
 									<DishSelector name={c} />
 								</li>
 							) : (
-								<li>{c}</li>
+								<li key={`comida-${i}`}>{c}</li>
 							)
 						)}
 					</ul>
 				</div>
 				<div className="cena">
 					<ul>
-						{cena.map((c) =>
+						{cena.map((c, i) =>
 							isEditing ? (
-								<li>
+								<li key={`cena-${i}`}>
 									<DishSelector name={c} />
 								</li>
 							) : (
-								<li>{c}</li>
+								<li key={`cena-${i}`}>{c}</li>
 							)
 						)}
 					</ul>
