@@ -1,0 +1,32 @@
+{
+    "principales": [
+        {
+            "id": 1,
+            "name": "Pollo a la plancha"
+        },
+        {
+            "id": 2,
+            "name": "Mole"
+        },
+        {
+            "id": 3,
+            "name": "Naan con pollo y pdg"
+        }
+    ],
+    "sides": [
+        {
+            "id": 1,
+            "name": "Arroz blanco"
+        },
+        {
+            "id": 2,
+            "name": "Baked sweet potato fries"
+        }
+    ],
+    "sopas": [
+        {
+            "id": 1,
+            "name": "Sopa de tortilla"
+        }
+    ]
+}
