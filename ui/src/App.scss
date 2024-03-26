@@ -17,7 +17,7 @@ strong {
 .App {
 	width: 70%;
 	margin: 0 auto;
-	padding: 50px 0;
+	padding: 40px 0;
 }
 .universeSections {
 	display: flex;
@@ -44,11 +44,12 @@ strong {
 		}
 		textarea {
 			margin-top: 15px;
+			height: 150px;
 		}
 		ul {
-			max-height: 200px;
+			height: 180px;
 			overflow: auto;
-			padding-left: 16px;
+			// padding-left: 16px;
 		}
 	}
 }

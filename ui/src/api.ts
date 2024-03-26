@@ -19,12 +19,16 @@ async function postData(url = '', data = {}) {
 }
 
 function api<T>(url: string): Promise<T> {
-	return fetch(url).then((response) => {
-		if (!response.ok) {
-			console.error(response.statusText);
-		}
-		return response.json();
-	});
+	return fetch(url)
+		.then((response) => {
+			if (!response.ok) {
+				console.error(response.statusText);
+			}
+			return response.json();
+		})
+		.catch((e) => {
+			throw e;
+		});
 }
 
 export const fetchDishes = async (collection: string): Promise<any> => {

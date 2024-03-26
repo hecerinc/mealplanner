@@ -15,33 +15,33 @@ const App: React.FC = () => {
 	const [sides, setSides] = React.useState<Dish[]>([]);
 
 	React.useEffect(() => {
-		Promise.all([fetchDishes('principales'), fetchDishes('sopas'), fetchDishes('sides')]).then(([principales, sopas, sides]) => {
-			setPrincipales(principales);
-			setSopas(sopas);
-			setSides(sides);
-		});
+		Promise.all([fetchDishes('principales'), fetchDishes('sopas'), fetchDishes('sides')])
+			.then(([principales, sopas, sides]) => {
+				setPrincipales(principales);
+				setSopas(sopas);
+				setSides(sides);
+			})
+			.catch((e) => {
+				console.error('Failed to fetch the database', e);
+			});
 	}, []);
 
 	const saveCollection = async (collection: string, items: Dish[]) => {
-		// try {
-			await saveDishes(collection, items);
-			switch (collection) {
-				case 'principales':
-					setPrincipales(items);
-					break;
-				case 'sopas':
-					setSopas(items);
-					break;
-				case 'sides':
-					setSides(items);
-					break;
-				default:
-					console.error(`Could not find collection ${collection}`);
-					return false;
-			}
-		// } catch (err) {
-		// 	console.error('Failed to save dishes in collection ' + collection);
-		// }
+		await saveDishes(collection, items);
+		switch (collection) {
+			case 'principales':
+				setPrincipales(items);
+				break;
+			case 'sopas':
+				setSopas(items);
+				break;
+			case 'sides':
+				setSides(items);
+				break;
+			default:
+				console.error(`Could not find collection ${collection}`);
+				return false;
+		}
 		return true;
 	};
 
@@ -53,25 +53,38 @@ const App: React.FC = () => {
 				<div className="universeSections">
 					<UniverseList
 						title="Platos principales"
-						items={principales}
+						items={principales ?? []}
 						saveCollection={saveCollection.bind(null, 'principales')}
 					/>
-					<UniverseList title="Sides" items={sides} saveCollection={saveCollection.bind(null, 'sides')} />
-					<UniverseList title="Sopas / Caldos" items={sopas} saveCollection={saveCollection.bind(null, 'sopas')} />
+					<UniverseList title="Sides" items={sides ?? []} saveCollection={saveCollection.bind(null, 'sides')} />
+					<UniverseList title="Sopas / Caldos" items={sopas ?? []} saveCollection={saveCollection.bind(null, 'sopas')} />
 				</div>
 			</section>
 			<section className="weekView">
 				<div className="univsecTitle">
 					<h2>Week view</h2>
-					<button
-						type="button"
-						className="editBtn"
-						onClick={() => {
-							setIsEditingWeek(!isEditingWeek);
-						}}
-					>
-						{isEditingWeek ? 'Save' : 'Edit'}
-					</button>
+					<div>
+						<button
+							type="button"
+							className="editBtn"
+							onClick={() => {
+								setIsEditingWeek(!isEditingWeek);
+							}}
+						>
+							{isEditingWeek ? 'Save' : 'Edit'}
+						</button>
+						{isEditingWeek && (
+							<button
+								type="button"
+								className="editBtn"
+								onClick={() => {
+									setIsEditingWeek(false);
+								}}
+							>
+								Cancel
+							</button>
+						)}
+					</div>
 				</div>
 				<h3 className="weekLabel">Sun. May 19 - Sat. May 15 2021</h3>
 				{isEditingWeek && <button type="button">Randomise all</button>}

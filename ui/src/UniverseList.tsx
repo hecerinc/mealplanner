@@ -58,7 +58,7 @@ export const UniverseList: React.FC<UniverseListProps> = ({ title, items, saveCo
 							type="button"
 							onClick={async () => {
 								const result = await saveCollection(parseEditItems(editItems));
-								if(result) {
+								if (result) {
 									setIsEditing(false);
 								}
 							}}
