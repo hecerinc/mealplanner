@@ -3,7 +3,7 @@ export interface Dish {
 	name: string;
 }
 export enum FoodType {
-	principal = 'principal',
-	soup = 'soup',
-	side = 'side',
+	principales = 'principales',
+	sopas = 'sopas',
+	sides = 'sides',
 }

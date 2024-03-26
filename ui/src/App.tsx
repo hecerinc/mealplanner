@@ -13,41 +13,63 @@ const getRandomInt = (min: number, max: number): number => {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-export const RandomFoodContext = React.createContext((ft: FoodType, m: string, dow: number) => {});
+export interface Menu {
+	principales: Dish[];
+	sopas: Dish[];
+	sides: Dish[];
+}
+
+export const RandomFoodContext = React.createContext((ft: FoodType, m: string, dow: number, direction: 'right' | 'left') => {});
+export const MenuContext = React.createContext<Menu | null>(null);
 
 const App: React.FC = () => {
 	const [isEditingWeek, setIsEditingWeek] = React.useState<boolean>(false);
 
-	const [principales, setPrincipales] = React.useState<Dish[]>([]);
 	const [weekDiet, setWeekDiet] = React.useState<DietSchedule[]>([]);
+	const [principales, setPrincipales] = React.useState<Dish[]>([]);
 	const [sopas, setSopas] = React.useState<Dish[]>([]);
 	const [sides, setSides] = React.useState<Dish[]>([]);
 
-	const getRandomFood = (ftype: FoodType): Dish => {
+	const mapFtype2Collection = (ftype: FoodType): Dish[] => {
 		let collection;
 		switch (ftype) {
-			case FoodType.principal:
+			case FoodType.principales:
 				collection = principales;
 				break;
-			case FoodType.soup:
+			case FoodType.sopas:
 				collection = sopas;
 				break;
-			case FoodType.side:
+			case FoodType.sides:
 				collection = sides;
 				break;
 			default:
 				collection = principales;
 		}
-		const collectionId = getRandomInt(0, collection.length - 1);
-		return collection[collectionId];
+		return collection;
 	};
 
-	const updateFood = (ftype: FoodType, meal: string, dow: number) => {
+	const getRandomFood = (ftype: FoodType): number => {
+		let collection: Dish[] = mapFtype2Collection(ftype);
+		const collectionId = getRandomInt(0, collection.length - 1);
+		return collectionId;
+	};
+
+	const updateFood = (ftype: FoodType, meal: string, dow: number, direction: 'right' | 'left') => {
 		const wd = [...weekDiet];
 		const dayOfWeek = { ...wd[dow] };
-		(dayOfWeek as any)[meal][ftype] = getRandomFood(ftype).name;
+		const currentOpt: number = (dayOfWeek as any)[meal][ftype];
+		const collection: Dish[] = mapFtype2Collection(ftype);
+		let newId = 0;
+		if (direction === 'left') {
+			newId = currentOpt - 1;
+			if (newId < 0) {
+				newId = collection.length + newId;
+			}
+		} else {
+			newId = (currentOpt + 1) % collection.length;
+		}
+		(dayOfWeek as any)[meal][ftype] = newId;
 		wd[dow] = dayOfWeek;
-		// (weekDiet[dow] as any)[meal][ftype] = getRandomFood(ftype);
 		setWeekDiet(wd);
 	};
 
@@ -132,14 +154,14 @@ const App: React.FC = () => {
 							for (let i = 0; i < 7; i++) {
 								week[i] = {
 									cena: {
-										principal: getRandomFood(FoodType.principal).name,
+										principales: getRandomFood(FoodType.principales),
 									},
 									comida: {
-										soup: getRandomFood(FoodType.soup).name,
-										principal: getRandomFood(FoodType.principal).name,
-										side: getRandomFood(FoodType.side).name,
+										sopas: getRandomFood(FoodType.sopas),
+										principales: getRandomFood(FoodType.principales),
+										sides: getRandomFood(FoodType.sides),
 									},
-								};
+								} as DietSchedule;
 							}
 							setWeekDiet(week);
 						}}
@@ -147,9 +169,17 @@ const App: React.FC = () => {
 						Randomise all
 					</button>
 				)}
-				<RandomFoodContext.Provider value={updateFood}>
-					<WeekSchedule isEditing={isEditingWeek} schedule={weekDiet} />
-				</RandomFoodContext.Provider>
+				<MenuContext.Provider
+					value={{
+						principales,
+						sopas,
+						sides,
+					}}
+				>
+					<RandomFoodContext.Provider value={updateFood}>
+						<WeekSchedule isEditing={isEditingWeek} schedule={weekDiet} />
+					</RandomFoodContext.Provider>
+				</MenuContext.Provider>
 			</section>
 		</main>
 	);
