@@ -1,18 +1,55 @@
 import React from 'react';
 
-import { WeekSchedule } from './WeekSchedule';
+import { WeekSchedule, DietSchedule } from './WeekSchedule';
 import { UniverseList } from './UniverseList';
 import { fetchDishes, saveDishes } from './api';
-import { Dish } from './App.types';
+import { Dish, FoodType } from './App.types';
 
 import './App.scss';
+
+const getRandomInt = (min: number, max: number): number => {
+	min = Math.ceil(min);
+	max = Math.floor(max);
+	return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+export const RandomFoodContext = React.createContext((ft: FoodType, m: string, dow: number) => {});
 
 const App: React.FC = () => {
 	const [isEditingWeek, setIsEditingWeek] = React.useState<boolean>(false);
 
 	const [principales, setPrincipales] = React.useState<Dish[]>([]);
+	const [weekDiet, setWeekDiet] = React.useState<DietSchedule[]>([]);
 	const [sopas, setSopas] = React.useState<Dish[]>([]);
 	const [sides, setSides] = React.useState<Dish[]>([]);
+
+	const getRandomFood = (ftype: FoodType): Dish => {
+		let collection;
+		switch (ftype) {
+			case FoodType.principal:
+				collection = principales;
+				break;
+			case FoodType.soup:
+				collection = sopas;
+				break;
+			case FoodType.side:
+				collection = sides;
+				break;
+			default:
+				collection = principales;
+		}
+		const collectionId = getRandomInt(0, collection.length - 1);
+		return collection[collectionId];
+	};
+
+	const updateFood = (ftype: FoodType, meal: string, dow: number) => {
+		const wd = [...weekDiet];
+		const dayOfWeek = { ...wd[dow] };
+		(dayOfWeek as any)[meal][ftype] = getRandomFood(ftype).name;
+		wd[dow] = dayOfWeek;
+		// (weekDiet[dow] as any)[meal][ftype] = getRandomFood(ftype);
+		setWeekDiet(wd);
+	};
 
 	React.useEffect(() => {
 		Promise.all([fetchDishes('principales'), fetchDishes('sopas'), fetchDishes('sides')])
@@ -87,8 +124,32 @@ const App: React.FC = () => {
 					</div>
 				</div>
 				<h3 className="weekLabel">Sun. May 19 - Sat. May 15 2021</h3>
-				{isEditingWeek && <button type="button">Randomise all</button>}
-				<WeekSchedule isEditing={isEditingWeek} />
+				{!isEditingWeek && (
+					<button
+						type="button"
+						onClick={() => {
+							const week = Array(7).fill(null);
+							for (let i = 0; i < 7; i++) {
+								week[i] = {
+									cena: {
+										principal: getRandomFood(FoodType.principal).name,
+									},
+									comida: {
+										soup: getRandomFood(FoodType.soup).name,
+										principal: getRandomFood(FoodType.principal).name,
+										side: getRandomFood(FoodType.side).name,
+									},
+								};
+							}
+							setWeekDiet(week);
+						}}
+					>
+						Randomise all
+					</button>
+				)}
+				<RandomFoodContext.Provider value={updateFood}>
+					<WeekSchedule isEditing={isEditingWeek} schedule={weekDiet} />
+				</RandomFoodContext.Provider>
 			</section>
 		</main>
 	);

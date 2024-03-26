@@ -1,18 +1,37 @@
 import React from 'react';
 
-const exampleLunch = ['Sopa de fideo', 'Milanesa de pollo', 'Frijoles', 'Verduritas'];
-const exampleCena = ['Huevo con papa'];
+import { FoodType } from './App.types';
+import { RandomFoodContext } from './App';
 
-export const WeekSchedule: React.FC<{ isEditing?: boolean }> = ({ isEditing = false }) => {
+export interface DietSchedule {
+	comida: {
+		principal: string;
+		side: string;
+		soup: string;
+	};
+	cena: {
+		principal: string;
+	};
+}
+
+const dow: string[] = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+export const WeekSchedule: React.FC<{ isEditing?: boolean; schedule: DietSchedule[] }> = ({ isEditing = false, schedule }) => {
+	console.log(schedule);
 	return (
 		<div className="weekSchedule">
-			<DayOfWeek editing={isEditing} cena={exampleCena} comida={exampleLunch} day="Sunday" />
-			<DayOfWeek editing={isEditing} cena={exampleCena} comida={exampleLunch} day="Monday" />
-			<DayOfWeek editing={isEditing} cena={exampleCena} comida={exampleLunch} day="Tuesday" />
-			<DayOfWeek editing={isEditing} cena={exampleCena} comida={exampleLunch} day="Wednesday" />
-			<DayOfWeek editing={isEditing} cena={exampleCena} comida={exampleLunch} day="Thursday" />
-			<DayOfWeek editing={isEditing} cena={exampleCena} comida={exampleLunch} day="Friday" />
-			<DayOfWeek editing={isEditing} cena={exampleCena} comida={exampleLunch} day="Saturday" />
+			{schedule.map((day: DietSchedule, i: number) => {
+				return (
+					<DayOfWeek
+						key={dow[i]}
+						editing={isEditing}
+						cena={[day.cena.principal]}
+						comida={[day.comida.soup, day.comida.principal, day.comida.side]}
+						dow={i}
+						day={dow[i]}
+					/>
+				);
+			})}
 		</div>
 	);
 };
@@ -22,8 +41,12 @@ interface DoWProps {
 	comida: string[];
 	cena: string[];
 	editing?: boolean;
+	dow: number;
 }
-const DayOfWeek: React.FC<DoWProps> = ({ day, comida, cena, editing = false }) => {
+
+const ftMap = [FoodType.soup, FoodType.principal, FoodType.side];
+
+const DayOfWeek: React.FC<DoWProps> = ({ day, comida, cena, editing = false, dow }) => {
 	const [isEditing, setIsEditing] = React.useState<boolean>(editing);
 
 	React.useEffect(() => {
@@ -39,7 +62,7 @@ const DayOfWeek: React.FC<DoWProps> = ({ day, comida, cena, editing = false }) =
 						{comida.map((c, i) =>
 							isEditing ? (
 								<li key={`comida-${i}`}>
-									<DishSelector name={c} />
+									<DishSelector name={c} type={ftMap[i]} meal="comida" dow={dow} />
 								</li>
 							) : (
 								<li key={`comida-${i}`}>{c}</li>
@@ -52,7 +75,7 @@ const DayOfWeek: React.FC<DoWProps> = ({ day, comida, cena, editing = false }) =
 						{cena.map((c, i) =>
 							isEditing ? (
 								<li key={`cena-${i}`}>
-									<DishSelector name={c} />
+									<DishSelector name={c} type={FoodType.principal} meal="cena" dow={dow} />
 								</li>
 							) : (
 								<li key={`cena-${i}`}>{c}</li>
@@ -65,12 +88,23 @@ const DayOfWeek: React.FC<DoWProps> = ({ day, comida, cena, editing = false }) =
 	);
 };
 
-export const DishSelector: React.FC<{ name: string }> = ({ name }) => {
+export const DishSelector: React.FC<{ name: string; type: FoodType; meal: string; dow: number }> = ({ name, type, meal, dow }) => {
+	const updateFood = React.useContext(RandomFoodContext);
 	return (
 		<div className="dishSelector">
-			<button className="prevBtn">&larr;</button>
+			<button
+				type="button"
+				className="prevBtn"
+				onClick={() => {
+					updateFood(type, meal, dow);
+				}}
+			>
+				&larr;
+			</button>
 			<p className="titleLabel">{name}</p>
-			<button className="nextBtn">&rarr;</button>
+			<button type="button" className="nextBtn">
+				&rarr;
+			</button>
 		</div>
 	);
 };
