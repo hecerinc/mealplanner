@@ -6,6 +6,8 @@ import { fetchDishes, saveDishes } from './api';
 import { Dish, FoodType } from './App.types';
 
 import './App.scss';
+import { WeekPicker } from './components/WeekPicker';
+import { getSundayOfWeek } from './utils';
 
 const getRandomInt = (min: number, max: number): number => {
 	min = Math.ceil(min);
@@ -20,6 +22,7 @@ export interface Menu {
 }
 
 export const RandomFoodContext = React.createContext((ft: FoodType, m: string, dow: number, direction: 'right' | 'left') => {});
+
 export const MenuContext = React.createContext<Menu | null>(null);
 
 const App: React.FC = () => {
@@ -29,6 +32,7 @@ const App: React.FC = () => {
 	const [principales, setPrincipales] = React.useState<Dish[]>([]);
 	const [sopas, setSopas] = React.useState<Dish[]>([]);
 	const [sides, setSides] = React.useState<Dish[]>([]);
+	const [currentWeek, setSelectedWeek] = React.useState<Date>(getSundayOfWeek(new Date()));
 
 	const mapFtype2Collection = (ftype: FoodType): Dish[] => {
 		let collection;
@@ -145,7 +149,13 @@ const App: React.FC = () => {
 						)}
 					</div>
 				</div>
-				<h3 className="weekLabel">Sun. May 19 - Sat. May 15 2021</h3>
+				{/* <h3 className="weekLabel">Sun. May 19 - Sat. May 15 2021</h3> */}
+				<WeekPicker
+					week={currentWeek}
+					setSelectedWeek={(date: Date) => {
+						setSelectedWeek(date);
+					}}
+				/>
 				{!isEditingWeek && (
 					<button
 						type="button"
