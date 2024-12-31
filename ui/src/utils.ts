@@ -1,3 +1,6 @@
+import type { DietSchedule, Dish } from './App.types';
+import { FoodType } from './App.types';
+
 export const getSundayOfWeek = (chosenDate: Date) => {
 	// Create a new Date object to avoid mutating the original date
 	const sunday = new Date(chosenDate);
@@ -22,4 +25,59 @@ export const formatDate = (date: Date): string => {
 	const day = date.getDate();
 	const year = date.getFullYear();
 	return `${monthSF} ${day}, ${year}`;
+};
+
+interface DishCollections {
+	principales: Dish[];
+	sopas: Dish[];
+	sides: Dish[];
+}
+
+export const mapFtype2Collection = (ftype: FoodType, collections: DishCollections): Dish[] => {
+	let collection;
+	const { principales, sopas, sides } = collections;
+	switch (ftype) {
+		case FoodType.principales:
+			collection = principales;
+			break;
+		case FoodType.sopas:
+			collection = sopas;
+			break;
+		case FoodType.sides:
+			collection = sides;
+			break;
+		default:
+			collection = principales;
+	}
+	return collection;
+};
+
+const getRandomInt = (min: number, max: number): number => {
+	min = Math.ceil(min);
+	max = Math.floor(max);
+	return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+export const getRandomFood = (ftype: FoodType, collections: DishCollections): number => {
+	let collection: Dish[] = mapFtype2Collection(ftype, collections);
+	const collectionId = getRandomInt(0, collection.length - 1);
+	return collectionId;
+};
+
+// Get a random 7-day menu
+export const randomiseWeek = (collections: DishCollections): DietSchedule[] => {
+	const week = Array(7).fill(null);
+	for (let i = 0; i < 7; i++) {
+		week[i] = {
+			cena: {
+				principales: getRandomFood(FoodType.principales, collections),
+			},
+			comida: {
+				sopas: getRandomFood(FoodType.sopas, collections),
+				principales: getRandomFood(FoodType.principales, collections),
+				sides: getRandomFood(FoodType.sides, collections),
+			},
+		} as DietSchedule;
+	}
+	return week;
 };

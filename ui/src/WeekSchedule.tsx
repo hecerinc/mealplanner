@@ -1,23 +1,12 @@
 import React from 'react';
 
 import { FoodType } from './App.types';
+import type { DietSchedule } from './App.types';
 import { RandomFoodContext, MenuContext, Menu } from './App';
-
-export interface DietSchedule {
-	comida: {
-		principales: number;
-		sides: number;
-		sopas: number;
-	};
-	cena: {
-		principales: number;
-	};
-}
 
 const dow: string[] = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 export const WeekSchedule: React.FC<{ isEditing?: boolean; schedule: DietSchedule[] }> = ({ isEditing = false, schedule }) => {
-	console.log(schedule);
 	return (
 		<div className="weekSchedule">
 			{schedule.map((day: DietSchedule, i: number) => {

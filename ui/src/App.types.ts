@@ -7,3 +7,14 @@ export enum FoodType {
 	sopas = 'sopas',
 	sides = 'sides',
 }
+
+export interface DietSchedule {
+	comida: {
+		principales: number;
+		sides: number;
+		sopas: number;
+	};
+	cena: {
+		principales: number;
+	};
+}
