@@ -69,6 +69,8 @@ def week_menu():
 
 def fetch_week_menu(week: str):
     week_from_db = mysqlDAO.get_menu(week)
+    if week_from_db is None:
+        week_from_db = []
     return jsonify(week_from_db)
 
 

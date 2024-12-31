@@ -8,16 +8,20 @@ menu_schema = {
     'items': {
         'type': 'object',
         'properties': {
-            'lunch': {
+            'comida': {
                 'type': 'object',
-                'properties': {'main': {'type': 'string'}, 'side': {'type': 'string'}, 'soup': {'type': 'string'}},
+                'properties': {
+                    'principales': {'type': 'string'},
+                    'side': {'type': 'string'},
+                    'sopas': {'type': 'string'},
+                },
             },
-            'dinner': {
+            'cena': {
                 'type': 'object',
-                'properties': {'main': {'type': 'string'}},
+                'properties': {'principales': {'type': 'string'}},
             },
         },
-        'required': ['lunch', 'dinner'],
+        'required': ['comida', 'cena'],
     },
 }
 

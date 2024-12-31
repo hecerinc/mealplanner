@@ -23,3 +23,9 @@ export interface DietSchedule {
 		principales: number;
 	};
 }
+
+export interface DishCollections {
+	principales: Dish[];
+	sopas: Dish[];
+	sides: Dish[];
+}

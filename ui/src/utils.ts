@@ -1,5 +1,9 @@
-import type { DietSchedule, Dish } from './App.types';
+import type { DietSchedule, Dish, DishCollections } from './App.types';
 import { FoodType } from './App.types';
+
+export const getCurrentWeek = (): Date => {
+	return getSundayOfWeek(new Date());
+};
 
 export const getSundayOfWeek = (chosenDate: Date) => {
 	// Create a new Date object to avoid mutating the original date
@@ -27,11 +31,12 @@ export const formatDate = (date: Date): string => {
 	return `${monthSF} ${day}, ${year}`;
 };
 
-interface DishCollections {
-	principales: Dish[];
-	sopas: Dish[];
-	sides: Dish[];
-}
+// Format as YYYY-MM-DD
+export const formatDateBackend = (date: Date): string => {
+	const offset = date.getTimezoneOffset();
+	const d1 = new Date(date.getTime() - offset * 60 * 1000);
+	return d1.toISOString().split('T')[0];
+};
 
 export const mapFtype2Collection = (ftype: FoodType, collections: DishCollections): Dish[] => {
 	let collection;

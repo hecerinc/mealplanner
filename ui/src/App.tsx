@@ -2,13 +2,16 @@ import React from 'react';
 
 import { WeekSchedule } from './WeekSchedule';
 import { UniverseList } from './UniverseList';
-import { fetchDishes, saveDishes } from './api';
+import { fetchDishes, fetchWeek, saveDishes, saveWeek } from './api';
 import type { Dish, DietSchedule, FoodType, Menu } from './App.types';
 
 import { WeekPicker } from './components/WeekPicker';
-import { getSundayOfWeek, randomiseWeek, mapFtype2Collection } from './utils';
+import { getSundayOfWeek, randomiseWeek, mapFtype2Collection, getCurrentWeek } from './utils';
 
 import './App.scss';
+import { EmptyWeekMessage } from './components/EmptyWeekMessage';
+import { replaceWithValues, reverseLookupDiet } from './dietLogicService';
+import { ApiDietSchedule } from './api.types';
 
 export const RandomFoodContext = React.createContext((ft: FoodType, m: string, dow: number, direction: 'right' | 'left') => {});
 
@@ -20,6 +23,7 @@ const App: React.FC = () => {
 	const [principales, setPrincipales] = React.useState<Dish[]>([]);
 	const [sopas, setSopas] = React.useState<Dish[]>([]);
 	const [sides, setSides] = React.useState<Dish[]>([]);
+	const [isSaving, setIsSaving] = React.useState<boolean>(false);
 	const [currentWeek, setSelectedWeek] = React.useState<Date>(getSundayOfWeek(new Date()));
 
 	const updateFood = (ftype: FoodType, meal: string, dow: number, direction: 'right' | 'left') => {
@@ -46,11 +50,22 @@ const App: React.FC = () => {
 	};
 
 	React.useEffect(() => {
+		const currentWeek: Date = getCurrentWeek();
 		Promise.all([fetchDishes('principales'), fetchDishes('sopas'), fetchDishes('sides')])
 			.then(([principales, sopas, sides]) => {
 				setPrincipales(principales);
 				setSopas(sopas);
 				setSides(sides);
+
+				fetchWeek(currentWeek).then((apiWeekDiet: ApiDietSchedule[]) => {
+					const weekData: DietSchedule[] = reverseLookupDiet(apiWeekDiet, {
+						principales,
+						sopas,
+						sides,
+					});
+					setWeekDiet(weekData);
+					setSelectedWeek(currentWeek);
+				});
 			})
 			.catch((e) => {
 				console.error('Failed to fetch the database', e);
@@ -76,6 +91,8 @@ const App: React.FC = () => {
 		return true;
 	};
 
+	const isWeekEmpty: boolean = weekDiet.length === 0;
+
 	return (
 		<main className="App">
 			<h1>Meal planner</h1>
@@ -95,25 +112,53 @@ const App: React.FC = () => {
 				<div className="univsecTitle">
 					<h2>Week view</h2>
 					<div>
-						<button
-							type="button"
-							className="editBtn"
-							onClick={() => {
-								setIsEditingWeek(!isEditingWeek);
-							}}
-						>
-							{isEditingWeek ? 'Save' : 'Edit'}
-						</button>
-						{isEditingWeek && (
+						{!isEditingWeek && !isWeekEmpty && (
 							<button
 								type="button"
 								className="editBtn"
 								onClick={() => {
-									setIsEditingWeek(false);
+									setIsEditingWeek(true);
 								}}
 							>
-								Cancel
+								Edit
 							</button>
+						)}
+						{isEditingWeek && (
+							<>
+								<button
+									type="button"
+									className="editBtn"
+									disabled={isSaving}
+									onClick={() => {
+										// TODO: do some other stuff
+										setIsSaving(true);
+										const finalMenu: ApiDietSchedule[] = replaceWithValues(weekDiet, {
+											principales,
+											sopas,
+											sides,
+										});
+										saveWeek(currentWeek, finalMenu).then((success: boolean) => {
+											if (success) {
+												setIsEditingWeek(false);
+											} else {
+												// TODO: alert some error
+											}
+											setIsSaving(false);
+										});
+									}}
+								>
+									Save
+								</button>
+								<button
+									type="button"
+									className="editBtn"
+									onClick={() => {
+										setIsEditingWeek(false);
+									}}
+								>
+									Cancel
+								</button>
+							</>
 						)}
 					</div>
 				</div>
@@ -138,6 +183,7 @@ const App: React.FC = () => {
 						</button>
 					</>
 				)}
+				{isWeekEmpty && <EmptyWeekMessage />}
 				<MenuContext.Provider
 					value={{
 						principales,

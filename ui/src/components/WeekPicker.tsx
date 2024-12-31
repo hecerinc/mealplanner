@@ -74,20 +74,17 @@ export const WeekPicker: React.FC<WeekPickerProps> = ({ week, setSelectedWeek })
 
 	return (
 		<div className={styles.container}>
-			<Field label="Select a date">
-				<DatePicker
-					calendar={{
-						dateRangeType: DateRangeType.Week,
-					}}
-					placeholder="Select a date..."
-					className={styles.control}
-					onSelectDate={onDateSelectedHandler}
-					open={isDatePickerOpen}
-					value={week}
-					popupSurface={{ ref: popupRef }}
-					root={{ children: renderPickerInput, ref: triggerWrapperRef }}
-				/>
-			</Field>
+			<DatePicker
+				calendar={{
+					dateRangeType: DateRangeType.Week,
+				}}
+				className={styles.control}
+				onSelectDate={onDateSelectedHandler}
+				open={isDatePickerOpen}
+				value={week}
+				popupSurface={{ ref: popupRef }}
+				root={{ children: renderPickerInput, ref: triggerWrapperRef }}
+			/>
 		</div>
 	);
 };

@@ -1,6 +1,7 @@
 // src/api.ts
-
-import { Dish } from './App.types';
+import { ApiDietSchedule } from './api.types';
+import type { DietSchedule, Dish } from './App.types';
+import { formatDateBackend } from './utils';
 
 const baseURL: string = 'http://localhost:5000/api';
 
@@ -31,12 +32,34 @@ function api<T>(url: string): Promise<T> {
 		});
 }
 
+// TODO: remove any
 export const fetchDishes = async (collection: string): Promise<any> => {
 	const endpoint = `${baseURL}/${collection}`;
 	return api<Dish[]>(endpoint);
 };
 
+// TODO: remove any
 export const saveDishes = async (collection: string, items: Dish[]): Promise<any> => {
 	const endpoint = `${baseURL}/${collection}`;
 	return postData(endpoint, items);
+};
+
+export const fetchWeek = async (week: Date): Promise<ApiDietSchedule[]> => {
+	const weekstr = formatDateBackend(week);
+	const endpoint = `${baseURL}/week_menu?week=${weekstr}`;
+
+	return api<ApiDietSchedule[]>(endpoint);
+};
+
+// TODO: remove any
+export const saveWeek = async (week: Date, weekDiet: ApiDietSchedule[]): Promise<any> => {
+	const weekstr = formatDateBackend(week);
+	const endpoint = `${baseURL}/week_menu?week=${weekstr}`;
+
+	const response = await postData(endpoint, weekDiet);
+	console.log('Saving response:', response);
+	if (response.success) {
+		return true;
+	}
+	return false;
 };
