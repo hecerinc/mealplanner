@@ -168,6 +168,14 @@ const App: React.FC = () => {
 						<WeekPicker
 							week={currentWeek}
 							setSelectedWeek={(date: Date) => {
+								fetchWeek(date).then((apiWeekDiet: ApiDietSchedule[]) => {
+									const weekData: DietSchedule[] = reverseLookupDiet(apiWeekDiet, {
+										principales,
+										sopas,
+										sides,
+									});
+									setWeekDiet(weekData);
+								});
 								setSelectedWeek(date);
 							}}
 						/>

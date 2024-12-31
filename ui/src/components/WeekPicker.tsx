@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Field, makeStyles, SlotRenderFunction } from '@fluentui/react-components';
+import { makeStyles, SlotRenderFunction } from '@fluentui/react-components';
 import { DateRangeType } from '@fluentui/react-calendar-compat';
 import { useOnClickOutside } from '@fluentui/react-utilities';
 import { DatePicker } from '@fluentui/react-datepicker-compat';
@@ -70,6 +70,7 @@ export const WeekPicker: React.FC<WeekPickerProps> = ({ week, setSelectedWeek })
 		}
 		const realDate = getSundayOfWeek(date);
 		setSelectedWeek(realDate);
+		setIsDatePickerOpen(false);
 	};
 
 	return (
