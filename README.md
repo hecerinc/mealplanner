@@ -5,7 +5,7 @@
 
 - [ ] Deploy to horizon server
 - [ ] Add deployment pipeline
-- [ ] Hide the universe (put it in tabs?)
+- [x] Hide the universe (put it in tabs?)
 - [ ] Fix layout for buttons, make prettier!
 
 
