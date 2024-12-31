@@ -3,18 +3,12 @@ import React from 'react';
 import { WeekSchedule } from './WeekSchedule';
 import { UniverseList } from './UniverseList';
 import { fetchDishes, saveDishes } from './api';
-import type { Dish, DietSchedule, FoodType } from './App.types';
+import type { Dish, DietSchedule, FoodType, Menu } from './App.types';
 
 import { WeekPicker } from './components/WeekPicker';
 import { getSundayOfWeek, randomiseWeek, mapFtype2Collection } from './utils';
 
 import './App.scss';
-
-export interface Menu {
-	principales: Dish[];
-	sopas: Dish[];
-	sides: Dish[];
-}
 
 export const RandomFoodContext = React.createContext((ft: FoodType, m: string, dow: number, direction: 'right' | 'left') => {});
 

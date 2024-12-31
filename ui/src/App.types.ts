@@ -8,6 +8,11 @@ export enum FoodType {
 	sides = 'sides',
 }
 
+export interface Menu {
+	principales: Dish[];
+	sopas: Dish[];
+	sides: Dish[];
+}
 export interface DietSchedule {
 	comida: {
 		principales: number;
