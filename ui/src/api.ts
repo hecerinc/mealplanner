@@ -1,9 +1,16 @@
 // src/api.ts
 import { ApiDietSchedule } from './api.types';
-import type { DietSchedule, Dish } from './App.types';
+import type { Dish } from './App.types';
 import { formatDateBackend } from './utils';
 
-const baseURL: string = 'http://localhost:5000/api';
+const getDomain = () => {
+	if (window.location.host.indexOf('13.66.213.192') > -1 || window.location.host.indexOf('arctan.dev') > -1) {
+		return 'http://13.66.213.192:8893';
+	}
+	return 'http://localhost:5000';
+};
+const domain = getDomain();
+const baseURL: string = `${domain}/api`;
 
 async function postData(url = '', data = {}) {
 	const response = await fetch(url, {
