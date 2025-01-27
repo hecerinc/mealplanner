@@ -66,7 +66,7 @@ const getRandomInt = (min: number, max: number): number => {
 export const getRandomFood = (ftype: FoodType, collections: DishCollections): number => {
 	let collection: Dish[] = mapFtype2Collection(ftype, collections);
 	const collectionId = getRandomInt(0, collection.length - 1);
-	return collectionId;
+	return collection[collectionId].id;
 };
 
 // Get a random 7-day menu

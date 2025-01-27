@@ -4,6 +4,8 @@ import { makeStyles, SlotRenderFunction } from '@fluentui/react-components';
 import { DateRangeType } from '@fluentui/react-calendar-compat';
 import { useOnClickOutside } from '@fluentui/react-utilities';
 import { DatePicker } from '@fluentui/react-datepicker-compat';
+import { CalendarRegular } from '@fluentui/react-icons';
+
 import { usePopupPositioning } from './usePopupPostioning';
 import { useFluent_unstable as useFluent } from '@fluentui/react-shared-contexts';
 import { formatDate, getSundayOfWeek } from '../utils';
@@ -28,6 +30,24 @@ const useStyles = makeStyles({
 	control: {
 		maxWidth: '300px',
 	},
+	weekPickerBtn: {
+		background: 'none',
+		fontSize: '1.5rem',
+		border: 0,
+		margin: '0 auto',
+		cursor: 'pointer',
+		fontFamily: 'Segoe UI, sans-serif',
+	},
+	weekPickerContainer: {
+		display: 'flex',
+		justifyContent: 'center',
+		margin: '20px 0',
+	},
+	calendarIco: {
+		width: '40px',
+		height: '40px',
+		marginRight: '8px',
+	},
 });
 
 const getWeekStr = (week: Date): string => {
@@ -47,10 +67,13 @@ export const WeekPicker: React.FC<WeekPickerProps> = ({ week, setSelectedWeek })
 
 	const renderPickerInput: SlotRenderFunction<any> = (_Component, _props) => {
 		return (
-			<div ref={triggerWrapperRef as React.LegacyRef<HTMLDivElement>}>
-				<button onClick={() => setIsDatePickerOpen(!isDatePickerOpen)} type="button">
-					{dateStr}
-				</button>
+			<div className={styles.weekPickerContainer}>
+				<CalendarRegular className={styles.calendarIco} />
+				<div ref={triggerWrapperRef as React.LegacyRef<HTMLDivElement>}>
+					<button className={styles.weekPickerBtn} onClick={() => setIsDatePickerOpen(!isDatePickerOpen)} type="button">
+						{dateStr}
+					</button>
+				</div>
 			</div>
 		);
 	};

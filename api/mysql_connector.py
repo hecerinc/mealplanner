@@ -1,4 +1,5 @@
 import json
+from typing import Dict
 
 import pyodbc
 
@@ -35,7 +36,11 @@ class MySQLDAO:
             raise ConnectionNotInitializedException('No connection initialized')
         menu_str = json.dumps(menu)
         cursor = self.cursor()
-        cursor.execute('INSERT INTO weekmenu(start_of_week, menu) VALUES(?, ?)', date, menu_str)
+        date_exists = self.get_menu(date)
+        if date_exists:
+            cursor.execute('UPDATE weekmenu SET menu = ? WHERE start_of_week = ?', menu_str, date)
+        else:
+            cursor.execute('INSERT INTO weekmenu(start_of_week, menu) VALUES(?, ?)', date, menu_str)
         self.conn.commit()
 
     def get_menu(self, date: str):
@@ -47,3 +52,21 @@ class MySQLDAO:
             parsed = json.loads(jsonstr)
             return parsed
         return None
+
+    def get_repository(self) -> Dict | None:
+        cursor = self.cursor()
+        cursor.execute('SELECT collection from repository WHERE id = 1')
+        row = cursor.fetchone()
+        if row:
+            jsonstr = row[0]
+            parsed = json.loads(jsonstr)
+            return parsed
+        return None
+
+    def save_repository(self, repo) -> bool:
+        if self.conn is None:
+            raise ConnectionNotInitializedException('No connection initialized')
+        cursor = self.cursor()
+        cursor.execute('UPDATE repository SET collection = ? WHERE id = 1', repo)
+        self.conn.commit()
+        return True

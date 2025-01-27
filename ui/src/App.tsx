@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { TabList, Tab, TabValue, SelectTabData, SelectTabEvent } from '@fluentui/react-components';
+import { Button, TabList, Tab, TabValue, SelectTabData, SelectTabEvent } from '@fluentui/react-components';
 
 import { WeekSchedule } from './WeekSchedule';
 import { UniverseList } from './UniverseList';
@@ -39,15 +39,19 @@ const App: React.FC = () => {
 			sides,
 		});
 		let newId = 0;
+		const currentIndex = collection.findIndex((t) => t.id === currentOpt);
+		if (currentIndex === -1) {
+			throw new Error('Unknown food');
+		}
 		if (direction === 'left') {
-			newId = currentOpt - 1;
+			newId = currentIndex - 1;
 			if (newId < 0) {
 				newId = collection.length + newId;
 			}
 		} else {
-			newId = (currentOpt + 1) % collection.length;
+			newId = (currentIndex + 1) % collection.length;
 		}
-		(dayOfWeek as any)[meal][ftype] = newId;
+		(dayOfWeek as any)[meal][ftype] = collection[newId].id;
 		wd[dow] = dayOfWeek;
 		setWeekDiet(wd);
 	};
@@ -181,9 +185,8 @@ const App: React.FC = () => {
 							)}
 						</div>
 					</div>
-					{/* <h3 className="weekLabel">Sun. May 19 - Sat. May 15 2021</h3> */}
 					{!isEditingWeek && (
-						<>
+						<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
 							<WeekPicker
 								week={currentWeek}
 								setSelectedWeek={(date: Date) => {
@@ -198,8 +201,8 @@ const App: React.FC = () => {
 									setSelectedWeek(date);
 								}}
 							/>
-							<button
-								type="button"
+							<Button
+								appearance="primary"
 								onClick={() => {
 									const randomWeekDiet: DietSchedule[] = randomiseWeek({ principales, sopas, sides });
 									setWeekDiet(randomWeekDiet);
@@ -207,8 +210,8 @@ const App: React.FC = () => {
 								}}
 							>
 								Randomise all
-							</button>
-						</>
+							</Button>
+						</div>
 					)}
 					{isWeekEmpty && <EmptyWeekMessage />}
 					<MenuContext.Provider
