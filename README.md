@@ -3,10 +3,10 @@
 
 ## TODO
 
-- [ ] Deploy to horizon server
-- [ ] Add deployment pipeline
+- [x] Deploy to horizon server
+- [x] Add deployment pipeline
 - [x] Hide the universe (put it in tabs?)
-- [ ] Fix layout for buttons, make prettier!
+- [x] Fix layout for buttons, make prettier!
 
 
 ## Running the server
