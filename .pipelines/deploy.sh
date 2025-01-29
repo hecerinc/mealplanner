@@ -12,7 +12,7 @@ cd ui/
 if [ "$ENVIRONMENT" == "PRODUCTION" ]; then
 	rm -rf build
 	PUBLIC_URL='/atom' yarn build
-	mv build/* $DEST
+	cp -R build/* $DEST
 fi
 
 ## Move to atom folder
