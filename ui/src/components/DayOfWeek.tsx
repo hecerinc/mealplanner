@@ -34,7 +34,8 @@ export const DayOfWeek: React.FC<DoWProps> = ({ day, comida, cena, editing = fal
 				<div className="comida">
 					<ul>
 						{comida.map((id, i) => {
-							const dishName: string = menuOptions[ftMap[i]][id].name;
+							const collection = menuOptions[ftMap[i]];
+							const dishName: string = collection.find((t) => t.id === id)?.name ?? 'ERROR';
 							return isEditing ? (
 								<li key={`comida-${i}`}>
 									<DishSelector name={dishName} ftype={ftMap[i]} meal="comida" dow={dow} />
@@ -48,7 +49,8 @@ export const DayOfWeek: React.FC<DoWProps> = ({ day, comida, cena, editing = fal
 				<div className="cena">
 					<ul>
 						{cena.map((id, i) => {
-							const dishName: string = menuOptions[FoodType.principales][id].name;
+							const collection = menuOptions[FoodType.principales];
+							const dishName: string = collection.find((t) => t.id === id)?.name ?? 'ERROR';
 							return isEditing ? (
 								<li key={`cena-${i}`}>
 									<DishSelector name={dishName} ftype={FoodType.principales} meal="cena" dow={dow} />

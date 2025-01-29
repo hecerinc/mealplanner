@@ -29,9 +29,10 @@ def hello_world():
 @app.route('/api/<collection>', methods=['GET', 'POST'])
 def principales(collection):
     if request.method == 'GET':
-        with open(db, 'r') as f:
-            c = json.load(f)
-        return jsonify(c[collection])
+        repo = mysqlDAO.get_repository()
+        if repo is None or collection not in repo:
+            abort(404)
+        return jsonify(repo[collection])
     else:
         return save_collection(collection)
 
@@ -39,12 +40,13 @@ def principales(collection):
 def save_collection(collection):
     if collection not in ['sides', 'principales', 'sopas']:
         abort(400)
-    with open(db, 'r') as f:
-        c = json.load(f)
-    c[collection] = request.json
-    with open(db, 'w', encoding='utf-8', newline='\n') as fd:
-        json.dump(c, fd, indent=4)
-    return jsonify({'success': 'success', 'collection': collection})
+    repo = mysqlDAO.get_repository()
+    if repo is None:
+        abort(500)
+    repo[collection] = request.json
+    if mysqlDAO.save_repository(json.dumps(repo)):
+        return jsonify({'success': 'success', 'collection': collection})
+    abort(500)
 
 
 @app.route('/api/week_menu', methods=['GET', 'POST'])

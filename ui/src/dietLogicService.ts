@@ -2,11 +2,11 @@ import { ApiDietSchedule } from './api.types';
 import { DietSchedule, Dish, DishCollections } from './App.types';
 
 const findDish = (dishIndex: number, inCollection: Dish[]): Dish | undefined => {
-	return inCollection[dishIndex];
+	return inCollection.find((d) => d.id === dishIndex);
 };
 
 const findIndexOfDish = (dishName: string, collection: Dish[]): number => {
-	return collection.findIndex((t) => t.name === dishName);
+	return collection.find((t) => t.name === dishName)?.id ?? -1;
 };
 
 /*
@@ -24,7 +24,7 @@ export const replaceWithValues = (weekDiet: DietSchedule[], collections: DishCol
 				sopas: findDish(wd.comida.sopas, sopas)?.name ?? '',
 			},
 			cena: {
-				principales: findDish(wd.comida.principales, principales)?.name ?? '',
+				principales: findDish(wd.cena.principales, principales)?.name ?? '',
 			},
 		};
 	});
@@ -44,7 +44,7 @@ export const reverseLookupDiet = (apiWeekDiet: ApiDietSchedule[], collections: D
 				sopas: findIndexOfDish(wd.comida.sopas, sopas),
 			},
 			cena: {
-				principales: findIndexOfDish(wd.comida.principales, principales),
+				principales: findIndexOfDish(wd.cena.principales, principales),
 			},
 		};
 	});
