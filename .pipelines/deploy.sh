@@ -21,6 +21,10 @@ fi
 # API
 
 ## Restart the service
+location=$(dirname "$0")
+source "$location/../.venv/bin/activate"
+
+pip3 install -r "$GIT_WORKING_DIRECTORY/requirements.txt"
 sudo systemctl restart mealplanner_api
 
 tz=$(date +"%Y-%m-%d %H:%M:%S%z")
