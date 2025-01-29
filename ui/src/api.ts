@@ -5,7 +5,7 @@ import { formatDateBackend } from './utils';
 
 const getDomain = () => {
 	if (window.location.host.indexOf('13.66.213.192') > -1 || window.location.host.indexOf('arctan.dev') > -1) {
-		return 'http://13.66.213.192:8893';
+		return 'http://13.66.213.192:8993';
 	}
 	return 'http://localhost:5000';
 };

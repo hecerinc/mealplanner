@@ -1,16 +1,12 @@
+import os
 import json
 
 import pyodbc
+from dotenv import load_dotenv
+dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
 
-connection_string = (
-    'DRIVER=MySQL ODBC 9.1 ANSI Driver;'
-    'SERVER=localhost;'
-    'DATABASE=meal_planner;'
-    'UID=root;'
-    'PWD=;'
-    'charset=utf8mb4;'
-)
-
+load_dotenv(dotenv_path)
+connection_string = os.environ.get('MYSQL_CONNECTION_STRING')
 
 class ConnectionNotInitializedException(Exception):
     pass

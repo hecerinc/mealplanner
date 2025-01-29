@@ -1,0 +1,19 @@
+[Unit]
+Description=Server for running the mealplanner app
+After=network.target mysqld.service
+
+
+[Service]
+Type=simple
+User=hector
+Group=hector
+ExecStart=/usr/bin/zsh -l /home/hector/projects/mealplanner/api/start_server.sh
+WorkingDirectory=/home/hector/projects/mealplanner/api
+TimeoutSec=10
+Restart=on-failure
+LimitNOFILE=10000
+
+
+[Install]
+WantedBy=multi-user.target
+

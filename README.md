@@ -23,6 +23,12 @@ FLASK_APP=server FLASK_DEBUG=true flask run
 ```
 
 
+Run in production:
+
+```
+gunicorn --timeout 360 -b "0.0.0.0:8993" "server:app"
+```
+
 ## Running the UI
 
 

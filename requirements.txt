@@ -2,3 +2,5 @@ flask
 Flask-Cors==5.0.0
 pyodbc==5.2.0
 jsonschema==4.23.0
+gunicorn==23.0.0
+python-dotenv==1.0.1
